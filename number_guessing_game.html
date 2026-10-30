@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the Number</title>
+  <style>
+    body {
+      background-color: #172554;
+      color: #F8FAFC;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px 12px;
+    }
+    input {
+      border-radius: 10px;
+      border: 3px solid #22D3EE;
+      background-color: white;
+      text-align: center;
+      padding: 10px;
+      width: 150px;
+      font-size: 16px;
+    }
+    button {
+      border-radius: 10px;
+      border: 2px dashed #22D3EE;
+      background-color: #F59E0B;
+      color: #172554;
+      padding: 10px 14px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .game-box {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 20px;
+      background: rgba(34,211,238,0.14);
+      border: 1px solid rgba(34,211,238,0.35);
+      border-radius: 15px;
+    }
+    #result { font-weight: bold; min-height: 24px; }
+  
+    /* Responsive layout */
+    @media (max-width: 768px) {
+      body { padding: 24px 16px; }
+      .game-box { width: 100%; max-width: 500px; box-sizing: border-box; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 18px 12px; }
+      .game-box { margin: 18px auto; padding: 18px 14px; }
+      .game-box h1 { font-size: 26px; }
+      input { width: 100%; max-width: 240px; box-sizing: border-box; }
+      button { padding: 10px 12px; }
+    }
+</style>
+</head>
+<body>
+  <div class="game-box">
+    <h1>GUESS THE NUMBER</h1>
+    <p>Guess a number from 1 to 10.</p>
+
+    <input type="number" id="input" min="1" max="10">
+    <br>
+    <button onclick="chk()">Check</button>
+    <button onclick="hint()">Hint</button>
+    <button onclick="restart()">Restart</button>
+
+    <p id="result"></p>
+    <p id="hint"></p>
+    <p id="attempts">Attempts: 0</p>
+    <h2 id="score">Score: 10</h2>
+  </div>
+
+  <script>
+    var guessno = Math.floor(Math.random() * 10) + 1;
+    var sc = 10;
+    var attempts = 0;
+    var gameover = false;
+
+    var input = document.getElementById("input");
+    var result = document.getElementById("result");
+    var score = document.getElementById("score");
+    var hintText = document.getElementById("hint");
+    var attemptsText = document.getElementById("attempts");
+
+    function chk() {
+      var enterno = input.value;
+
+      if (gameover) {
+        result.textContent = "Click Restart to play again.";
+        return;
+      }
+
+      if (enterno === "" || Number(enterno) < 1 || Number(enterno) > 10) {
+        result.textContent = "Enter a number from 1 to 10.";
+        return;
+      }
+
+      attempts = attempts + 1;
+      attemptsText.textContent = "Attempts: " + attempts;
+
+      if (Number(guessno) === Number(enterno)) {
+        result.textContent = "Correct Guess! You won.";
+        score.textContent = "Final score: " + sc;
+        gameover = true;
+      } else {
+        sc = sc - 1;
+        if (sc < 0) {
+          sc = 0;
+        }
+        score.textContent = "Score: " + sc;
+
+        if (sc === 0) {
+          result.textContent = "Game Over! The number was " + guessno;
+          gameover = true;
+        } else if (Number(enterno) < guessno) {
+          result.textContent = "Wrong guess. Try a higher number.";
+        } else {
+          result.textContent = "Wrong guess. Try a lower number.";
+        }
+      }
+
+      input.value = "";
+    }
+
+    function hint() {
+      if (gameover) {
+        hintText.textContent = "Start a new game to get another hint.";
+      } else if (guessno > 5) {
+        hintText.textContent = "Hint: The number is greater than 5.";
+      } else {
+        hintText.textContent = "Hint: The number is 5 or less.";
+      }
+    }
+
+    function restart() {
+      guessno = Math.floor(Math.random() * 10) + 1;
+      sc = 10;
+      attempts = 0;
+      gameover = false;
+
+      input.value = "";
+      result.textContent = "";
+      hintText.textContent = "";
+      attemptsText.textContent = "Attempts: 0";
+      score.textContent = "Score: 10";
+    }
+  </script>
+</body>
+</html>
